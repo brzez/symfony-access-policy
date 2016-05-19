@@ -1,0 +1,3 @@
+brzez_access_policy_homepage:
+    path:     /
+    defaults: { _controller: BrzezAccessPolicyBundle:Default:index }

@@ -1,0 +1,11 @@
+{
+    "name": "brzez/access-policy-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "brzez",
+            "email": "pawel@brzez.com"
+        }
+    ],
+    "require": {}
+}
