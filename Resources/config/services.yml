@@ -1,4 +1,8 @@
 services:
-#    brzez_access_policy.example:
-#        class: Brzez\AccessPolicyBundle\Example
-#        arguments: ["@service_id", "plain_value", %parameter%]
+  brzez_access_policy.access_policy_provider:
+    class: Brzez\AccessPolicyBundle\Service\ContainerAware\ContainerAwareAccessPolicyProvider
+    arguments: []
+     # arguments: ["@service_id", "plain_value", %parameter%]
+    calls:
+      - [ setContainer, [ '@service_container' ] ]
+       
