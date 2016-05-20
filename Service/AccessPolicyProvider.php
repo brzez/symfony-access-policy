@@ -3,7 +3,7 @@ namespace Brzez\AccessPolicyBundle\Service;
 
 use Brzez\AccessPolicyBundle\Service\AccessPolicy;
 
-class AccessPolicyService
+class AccessPolicyProvider
 {
     protected $policies = [];
 

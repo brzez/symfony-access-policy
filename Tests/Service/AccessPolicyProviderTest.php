@@ -2,17 +2,17 @@
 namespace Brzez\AccessPolicyBundle\Tests\Service;
 
 use Brzez\AccessPolicyBundle\Service\AccessPolicy;
-use Brzez\AccessPolicyBundle\Service\AccessPolicyService;
+use Brzez\AccessPolicyBundle\Service\AccessPolicyProvider;
 use Brzez\AccessPolicyBundle\Tests\Service\Mocks\Apple;
 use Brzez\AccessPolicyBundle\Tests\Service\Mocks\Banana;
 use PHPUnit_Framework_TestCase;
 
-class AccessPolicyServiceTest extends PHPUnit_Framework_TestCase
+class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
 {
     /** @test */
     public function it_runs_methods_from_proper_policy()
     {
-        $service = $this->createAccessPolicyService();
+        $service = $this->createAccessPolicyProvider();
 
         $policy = $this->getMock(AccessPolicy::class);
         $policy->expects($this->once())->method('resolve')->willReturn(true);
@@ -31,7 +31,7 @@ class AccessPolicyServiceTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(\Exception::class);
         
-        $service = $this->createAccessPolicyService();
+        $service = $this->createAccessPolicyProvider();
 
         $service->registerPolicy(Apple::class, $this->getMock(AccessPolicy::class));
         $service->registerPolicy(Apple::class, $this->getMock(AccessPolicy::class));
@@ -42,13 +42,13 @@ class AccessPolicyServiceTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(\Exception::class);
         
-        $service = $this->createAccessPolicyService();
+        $service = $this->createAccessPolicyProvider();
 
         $service->can('non-existent-intent', new Apple());
     }
 
-    private function createAccessPolicyService()
+    private function createAccessPolicyProvider()
     {
-        return new AccessPolicyService;
+        return new AccessPolicyProvider;
     }
 }
