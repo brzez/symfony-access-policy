@@ -10,12 +10,16 @@ class ContainerAwareAccessPolicyProvider extends AccessPolicyProvider implements
 {
     protected $container;
 
-    function __construct()
-    {
-    }
-
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    public function setPolicies($policies)
+    {
+        foreach ($policies as $policy) {
+            extract($policy);
+            $this->registerPolicy($class, new $policy);
+        }
     }
 }
