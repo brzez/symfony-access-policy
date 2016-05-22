@@ -7,5 +7,7 @@
             "email": "pawel@brzez.com"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-4": {"Brzez\\AccessPolicyBundle\\": "."}
+    }
 }
