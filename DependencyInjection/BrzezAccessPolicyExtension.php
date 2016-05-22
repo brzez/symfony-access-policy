@@ -24,5 +24,8 @@ class BrzezAccessPolicyExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $providerDef = $container->getDefinition('brzez_access_policy.access_policy_provider');
+        $providerDef->addMethodCall('setPolicies', [ $config['policies'] ]);
     }
 }
