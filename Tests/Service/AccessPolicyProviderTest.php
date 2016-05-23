@@ -5,6 +5,7 @@ use Brzez\AccessPolicyBundle\Service\AccessPolicy;
 use Brzez\AccessPolicyBundle\Service\AccessPolicyProvider;
 use Brzez\AccessPolicyBundle\Tests\Service\Mocks\Apple;
 use Brzez\AccessPolicyBundle\Tests\Service\Mocks\Banana;
+use Brzez\AccessPolicyBundle\Tests\Service\Mocks\BananaPolicy;
 use PHPUnit_Framework_TestCase;
 
 class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
@@ -45,6 +46,25 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
         $service = $this->createAccessPolicyProvider();
 
         $service->can('non-existent-intent', new Apple());
+    }
+
+    /** @test */
+    public function it_passes_multiple_args_to_the_provider()
+    {
+        $provider = $this->createAccessPolicyProvider();
+        $object = new Banana;
+
+        $policyMock = $this->getMock(AccessPolicy::class);
+
+        $policyMock->expects($this->exactly(2))->method('resolve')->with(
+            'eat-this-banana',
+            [$object, 'arg 1', 'arg 2']
+        );
+
+        $provider->registerPolicy(Banana::class, $policyMock);
+
+        $provider->can('eat-this-banana', $object, 'arg 1', 'arg 2');
+        $provider->cannot('eat-this-banana', $object, 'arg 1', 'arg 2');
     }
 
     private function createAccessPolicyProvider()
