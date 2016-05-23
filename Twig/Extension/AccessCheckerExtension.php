@@ -25,12 +25,12 @@ class AccessCheckerExtension extends \Twig_Extension
 
     public function can($intent, $object)
     {
-        return $this->policyProvider->can($intent, $object);
+        return call_user_func_array([$this->policyProvider, 'can'], func_get_args());
     }
 
     public function cannot($intent, $object)
-    {
-        return $this->policyProvider->cannot($intent, $object);
+    {        
+        return call_user_func_array([$this->policyProvider, 'cannot'], func_get_args());
     }
 
     /**

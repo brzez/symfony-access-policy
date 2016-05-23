@@ -16,10 +16,10 @@ class AccessCheckerExtensionTest extends \PHPUnit_Framework_TestCase
         $providerMock = $this->getMock(ContainerAwareAccessPolicyProvider::class);
 
         $providerMock->expects($this->once())->method('can')
-            ->with($this->isInstanceOf(Apple::class), 'arg 1', 'arg 2')
+            ->with('intent', $this->isInstanceOf(Apple::class), 'arg 1', 'arg 2')
         ;
         $providerMock->expects($this->once())->method('cannot')
-            ->with($this->isInstanceOf(Apple::class), 'arg 1', 'arg 2')
+            ->with('intent', $this->isInstanceOf(Apple::class), 'arg 1', 'arg 2')
         ;
 
         $ext = new AccessCheckerExtension($providerMock);
