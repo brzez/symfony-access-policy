@@ -26,7 +26,7 @@ class AccessPolicyProvider
 
     public function cannot($intent, $object)
     {
-        return !$this->can($intent, $object);
+        return ! call_user_func_array([$this, 'can'], func_get_args());
     }
 
     protected function resolvePolicy($object)
