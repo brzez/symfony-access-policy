@@ -14,13 +14,11 @@ trait AccessCheckerTrait
 
     public function can($intent, $object)
     {
-        /** @var \Brzez\AccessPolicyBundle\Service\ContainerAware\ContainerAwareAccessPolicyProvider */
-        return $this->getPolicyProvider()->can($intent, $object);
+        return call_user_func_array([$this->getPolicyProvider(), 'can'], func_get_args());
     }
 
     public function cannot($intent, $object)
     {
-        /** @var \Brzez\AccessPolicyBundle\Service\ContainerAware\ContainerAwareAccessPolicyProvider */
-        return $this->getPolicyProvider()->cannot($intent, $object);
+        return call_user_func_array([$this->getPolicyProvider(), 'cannot'], func_get_args());
     }
 }
