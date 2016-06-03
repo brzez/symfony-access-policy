@@ -17,9 +17,10 @@ class AccessCheckerExtension extends \Twig_Extension
     * {@inheritdoc}
     */
     public function getFunctions() {
+
         return [
-            'can' => new \Twig_Function_Method($this, 'can'),
-            'cannot' => new \Twig_Function_Method($this, 'cannot')
+            'can' => new \Twig_SimpleFunction('can', [$this, 'can']),
+            'cannot' => new \Twig_SimpleFunction('cannot', [$this, 'cannot'])
         ];
     }
 
