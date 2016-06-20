@@ -7,7 +7,7 @@ class AccessPolicyProvider
 {
     protected $policies = [];
 
-    public function registerPolicy($class, AccessPolicy $policy)
+    public function registerPolicy($class, $policy)
     {
         if(isset($this->policies[$class])){
             // todo: support multiple policies for the same type (?)
