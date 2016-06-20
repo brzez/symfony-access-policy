@@ -2,10 +2,17 @@
 namespace Brzez\AccessPolicyBundle\Service;
 
 use Brzez\AccessPolicyBundle\Service\AccessPolicy;
+use Brzez\AccessPolicyBundle\Service\AccessPolicyResolver;
 
 class AccessPolicyProvider
 {
+    protected $policyResolver;
     protected $policies = [];
+
+    function __construct(AccessPolicyResolver $policyResolver)
+    {
+        $this->policyResolver = $policyResolver;
+    }
 
     public function registerPolicy($class, $policy)
     {
@@ -21,7 +28,7 @@ class AccessPolicyProvider
         $policy = $this->resolvePolicy($object);
         $args   = array_slice(func_get_args(), 1);
 
-        return $policy->resolve($intent, $args);
+        return $this->policyResolver->resolve($policy, $intent, $args);
     }
 
     public function cannot($intent, $object)

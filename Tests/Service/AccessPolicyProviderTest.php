@@ -3,9 +3,6 @@ namespace Brzez\AccessPolicyBundle\Tests\Service;
 
 use Brzez\AccessPolicyBundle\Service\AccessPolicy;
 use Brzez\AccessPolicyBundle\Service\AccessPolicyProvider;
-use Brzez\AccessPolicyBundle\Tests\Service\Mocks\Apple;
-use Brzez\AccessPolicyBundle\Tests\Service\Mocks\Banana;
-use Brzez\AccessPolicyBundle\Tests\Service\Mocks\BananaPolicy;
 use PHPUnit_Framework_TestCase;
 
 class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase

@@ -1,6 +1,9 @@
 services:
   brzez_access_policy.access_policy_provider:
     class: Brzez\AccessPolicyBundle\Service\AccessPolicyProvider
+    arguments: ['@brzez_access_policy.access_policy_resolver']
+  brzez_access_policy.access_policy_resolver:
+    class: Brzez\AccessPolicyBundle\Service\AccessPolicyResolver
     arguments: []
   brzez_access_policy.twig_ext:
     class: Brzez\AccessPolicyBundle\Twig\Extension\AccessCheckerExtension
