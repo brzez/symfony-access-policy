@@ -29,13 +29,7 @@ class PolicyCompilerPass implements CompilerPassInterface
     public function registerPolicy(Definition $providerDefinition, $id, $tags)
     {
         foreach ($tags as $tag) {
-            if(empty($tag['class'])){
-                throw new \UnexpectedValueException("Missing argument `class` for policy: $id");
-            }
-            $class = $tag['class'];
-
             $providerDefinition->addMethodCall('registerPolicy', [
-                $class, 
                 new Reference($id)
             ]);
         }

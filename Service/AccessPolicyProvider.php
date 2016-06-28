@@ -14,8 +14,10 @@ class AccessPolicyProvider
         $this->policyResolver = $policyResolver;
     }
 
-    public function registerPolicy($class, $policy)
+    public function registerPolicy(AccessPolicy $policy)
     {
+        $class = $policy->getPoliciedClass();
+        
         if(isset($this->policies[$class])){
             // todo: support multiple policies for the same type (?)
             throw new \Exception("Policy for [$class] already registered");
