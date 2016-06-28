@@ -1,7 +1,7 @@
 <?php 
 namespace Brzez\AccessPolicyBundle\Service;
 
-interface AccessPolicy
+interface AccessPolicyInterface
 {
     /**
      * @return string class

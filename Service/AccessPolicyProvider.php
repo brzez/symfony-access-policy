@@ -1,7 +1,7 @@
 <?php 
 namespace Brzez\AccessPolicyBundle\Service;
 
-use Brzez\AccessPolicyBundle\Service\AccessPolicy;
+use Brzez\AccessPolicyBundle\Service\AccessPolicyInterface;
 use Brzez\AccessPolicyBundle\Service\AccessPolicyResolver;
 
 class AccessPolicyProvider
@@ -14,7 +14,7 @@ class AccessPolicyProvider
         $this->policyResolver = $policyResolver;
     }
 
-    public function registerPolicy(AccessPolicy $policy)
+    public function registerPolicy(AccessPolicyInterface $policy)
     {
         $class = $policy->getPoliciedClass();
         
