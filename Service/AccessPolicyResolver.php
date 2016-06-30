@@ -8,6 +8,7 @@ class AccessPolicyResolver
         $methodName = $this->resolveIntentMethodName($intent);
 
         $this->validateMethodExists($policy, $intent, $methodName);
+        call_user_func_array([$policy, $methodName], $args);
     }
 
     public function validateMethodExists($policy, $intent, $methodName)
