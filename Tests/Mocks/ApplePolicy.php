@@ -10,4 +10,9 @@ class ApplePolicy implements AccessPolicyInterface
     {
         return Apple::class;
     }
+
+    public function canDoSomething()
+    {
+        return true;
+    }
 }

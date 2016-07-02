@@ -1,9 +1,9 @@
 <?php 
 namespace Brzez\AccessPolicyBundle\Tests\Service;
 
-use AppBundle\TestPolicy;
 use Brzez\AccessPolicyBundle\Service\AccessPolicyResolver;
 use Brzez\AccessPolicyBundle\Tests\Mocks\Apple;
+use Brzez\AccessPolicyBundle\Tests\Mocks\ApplePolicy;
 use PHPUnit_Framework_TestCase;
 
 class AccessPolicyResolverTest extends PHPUnit_Framework_TestCase
@@ -17,7 +17,7 @@ class AccessPolicyResolverTest extends PHPUnit_Framework_TestCase
 
         $resolver = new AccessPolicyResolver();
 
-        $resolver->resolve(new TestPolicy, 'non-existent-intent', [new Apple]);
+        $resolver->resolve(new ApplePolicy, 'non-existent-intent', [new Apple]);
     }
 
     /**
@@ -27,7 +27,7 @@ class AccessPolicyResolverTest extends PHPUnit_Framework_TestCase
     {
         $resolver = new AccessPolicyResolver;
 
-        $policyMock = $this->getMock(TestPolicy::class);
+        $policyMock = $this->getMock(ApplePolicy::class);
 
         $policyMock->expects($this->once())
             ->method('canDoSomething');
@@ -42,7 +42,7 @@ class AccessPolicyResolverTest extends PHPUnit_Framework_TestCase
     {
         $resolver = new AccessPolicyResolver;
 
-        $policyMock = $this->getMock(TestPolicy::class);
+        $policyMock = $this->getMock(ApplePolicy::class);
 
         $apple = new Apple;
 
