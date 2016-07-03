@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a access checker, inspired by [Laravel](https://laravel.com/docs/5.1/authorization#checking-abilities).
+Access checker, inspired by [Laravel](https://laravel.com/docs/5.1/authorization#checking-abilities).
 
 It allows for checking access via simple **can** and **cannot** methods accessible via the *brzez_access_policy.access_policy_provider* service.
 
@@ -19,18 +19,11 @@ The **2nd** arg is always used for finding the matching policy.
 
 The rest are just passed to the policy **can*()** method.
 
+Policy needs to implement **AccessPolicyInterface** which requires the **getPoliciedClass** method.
 
-Policy needs to extend **ContainerAwareAccessPolicy** or **AccessPolicy**
+Policies are registered as services.
 
-*ContainerAwareAccessPolicy* adds container access.
-
-**intent** passed to can/cannot methods is written in *kebab-case*.
-
-It is then transformed to camelCase and the *can* prefix is added.
-
-Which means that intent *edit-user-data* will mean running *canEditUserData* method on the appropriate policy.
-
-There is a *todo* for adding policies as services, which would probably be more 'Symfony way' - full container access is bad.
+The policy service needs to be tagged as *access_policy* so it will be recognized by the access policy provider.
 
 ## Installation
 
@@ -55,13 +48,27 @@ public function registerBundles()
 }
 ```
 
-## Configuration
-In **app/config/config.yml**
+## Registering policies
+In **services.yml**
 
 ```yml
-brzez_access_policy:
-    policies:
-        - {class: \AppBundle\SomeEntity, policy: AppBundle\SomeEntityPolicy}
+services:
+  test_policy:
+    class: AppBundle\TestPolicy
+    tags:
+      - {name: access_policy}
+```
+
+## Naming intent methods
+When using **can**/**cannot** methods the intent is written in kebab-case, without the can/cannot word.
+
+Example:
+```php
+// Will run canChangeStatus($something) on the policy
+$this->can('change-status', $something);
+
+// Will return negated canChangeStatus($something)
+$this->cannot('change-status', $something);
 ```
 
 ## Usage
@@ -93,15 +100,13 @@ Let's say we have **SomeEntity** and we need to check **view** access via our po
 
 We need to create **SomeEntityPolicy** with **canView** method.
 ```php
-use Brzez\AccessPolicyBundle\Service\ContainerAware\ContainerAwareAccessPolicy;
+use Brzez\AccessPolicyBundle\Service\AccessPolicyInterface;
 
-class SomeEntityPolicy extends ContainerAwareAccessPolicy
+class SomeEntityPolicy implements AccessPolicyInterface
 {
     public function canView(SomeEntity $entity)
     {
         // access logic here
-        // you can use $this->get to access services from container.
-        // this is a easy way to get the current user etc.
         return false;
     }
 }
@@ -109,12 +114,14 @@ class SomeEntityPolicy extends ContainerAwareAccessPolicy
 
 Link the policy to the entity
 
-In **app/config/config.yml**
+In **app/config/services.yml**
 
 ```yml
-brzez_access_policy:
-    policies:
-        - {class: \AppBundle\SomeEntity, policy: AppBundle\SomeEntityPolicy}
+services:
+  test_policy:
+    class: AppBundle\SomeEntityPolicy
+    tags:
+      - {name: access_policy}
 ```
 
 Now you can check access in the controller:
