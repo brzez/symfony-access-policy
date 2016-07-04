@@ -6,6 +6,7 @@ use Brzez\AccessPolicyBundle\Service\AccessPolicyProvider;
 use Brzez\AccessPolicyBundle\Service\AccessPolicyResolver;
 use Brzez\AccessPolicyBundle\Tests\Mocks\Apple;
 use Brzez\AccessPolicyBundle\Tests\Mocks\ApplePolicy;
+use Brzez\AccessPolicyBundle\Tests\Mocks\Orange;
 use PHPUnit_Framework_TestCase;
 
 class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
@@ -51,5 +52,18 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
         
         $provider->can('view', $apple, 1, 2, 3);
         $provider->cannot('view', $apple, 1, 2, 3);
+    }
+
+    /** @test */
+    public function throws_when_class_is_not_policied()
+    {
+        $this->setExpectedException(\Exception::class);
+
+        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
+
+        $provider = new AccessPolicyProvider($resolver);
+        $provider->registerPolicy(new ApplePolicy);
+        
+        $provider->can('view', new Orange, 1, 2, 3);
     }
 }
