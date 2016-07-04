@@ -19,14 +19,6 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('brzez_access_policy');
-        $rootNode->children()
-            ->arrayNode('policies')
-            ->requiresAtLeastOneElement()
-            ->prototype('array')->children()
-                ->scalarNode('class')->isRequired(true)->end()
-                ->scalarNode('policy')->isRequired(true)->end()
-            ->end();
-
 
         return $treeBuilder;
     }

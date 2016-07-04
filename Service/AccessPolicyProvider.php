@@ -1,14 +1,23 @@
 <?php 
 namespace Brzez\AccessPolicyBundle\Service;
 
-use Brzez\AccessPolicyBundle\Service\AccessPolicy;
+use Brzez\AccessPolicyBundle\Service\AccessPolicyInterface;
+use Brzez\AccessPolicyBundle\Service\AccessPolicyResolver;
 
 class AccessPolicyProvider
 {
+    protected $policyResolver;
     protected $policies = [];
 
-    public function registerPolicy($class, AccessPolicy $policy)
+    function __construct(AccessPolicyResolver $policyResolver)
     {
+        $this->policyResolver = $policyResolver;
+    }
+
+    public function registerPolicy(AccessPolicyInterface $policy)
+    {
+        $class = $policy->getPoliciedClass();
+        
         if(isset($this->policies[$class])){
             // todo: support multiple policies for the same type (?)
             throw new \Exception("Policy for [$class] already registered");
@@ -21,7 +30,7 @@ class AccessPolicyProvider
         $policy = $this->resolvePolicy($object);
         $args   = array_slice(func_get_args(), 1);
 
-        return $policy->resolve($intent, $args);
+        return $this->policyResolver->resolve($policy, $intent, $args);
     }
 
     public function cannot($intent, $object)

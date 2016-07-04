@@ -2,14 +2,14 @@
 
 namespace Brzez\AccessPolicyBundle\Twig\Extension;
 
-use Brzez\AccessPolicyBundle\Service\ContainerAware\ContainerAwareAccessPolicyProvider;
+use Brzez\AccessPolicyBundle\Service\AccessPolicyProvider;
 
 class AccessCheckerExtension extends \Twig_Extension
 {
     /** @var ContainerAwareAccessPolicyProvider */
     protected $policyProvider;
 
-    function __construct(ContainerAwareAccessPolicyProvider $policyProvider)
+    function __construct(AccessPolicyProvider $policyProvider)
     {
         $this->policyProvider = $policyProvider;    
     }
