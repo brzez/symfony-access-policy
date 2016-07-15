@@ -3,7 +3,7 @@ namespace Brzez\AccessPolicyBundle\Service;
 
 class AccessPolicyResolver
 {
-    public function resolve($policies, $intent, $args)
+    public function resolve(array $policies, $intent, $args)
     {
         $methodName = $this->resolveIntentMethodName($intent);
 
