@@ -17,7 +17,7 @@ class AccessPolicyResolverTest extends PHPUnit_Framework_TestCase
 
         $resolver = new AccessPolicyResolver();
 
-        $resolver->resolve(new ApplePolicy, 'non-existent-intent', [new Apple]);
+        $resolver->resolve([new ApplePolicy], 'non-existent-intent', [new Apple]);
     }
 
     /**
@@ -32,7 +32,7 @@ class AccessPolicyResolverTest extends PHPUnit_Framework_TestCase
         $policyMock->expects($this->once())
             ->method('canDoSomething');
 
-        $resolver->resolve($policyMock, 'do-something', [new Apple]);
+        $resolver->resolve([$policyMock], 'do-something', [new Apple]);
     }
 
     /**
@@ -50,6 +50,6 @@ class AccessPolicyResolverTest extends PHPUnit_Framework_TestCase
             ->method('canDoSomething')
             ->with($apple, 1, 2, 3);
 
-        $resolver->resolve($policyMock, 'do-something', [$apple, 1, 2, 3]);
+        $resolver->resolve([$policyMock], 'do-something', [$apple, 1, 2, 3]);
     }
 }

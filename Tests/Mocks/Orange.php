@@ -1,7 +1,11 @@
 <?php 
 namespace Brzez\AccessPolicyBundle\Tests\Mocks;
 
-class Orange
+class Orange implements Edible
 {
-    
+
+    public function isReadyToBeEaten()
+    {
+        return false;
+    }
 }

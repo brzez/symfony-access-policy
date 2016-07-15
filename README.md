@@ -20,6 +20,15 @@ The **2nd** arg is always used for finding the matching policy.
 The rest are just passed to the policy **can*()** method.
 
 Policy needs to implement **AccessPolicyInterface** which requires the **getPoliciedClass** method.
+Policied objects are checked via 
+
+``` php
+is_a($object, $policy->getPoliciedClass());
+```
+
+Which means that it will work for mocked entities.
+It's also possible to implement 'global' policies for interfaces / parent classes.
+
 
 Policies are registered as services.
 
@@ -160,3 +169,10 @@ You can also check access in twig views:
         i cannot view someObject
     {% endif %}
 ```
+
+
+## Changelog
+
+- 0.9.0
+    Less strict class checking - *is_a* (instanceof) instead of strict get_class == classname
+    This way it will work with mocked entities

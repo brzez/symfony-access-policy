@@ -1,7 +1,11 @@
 <?php 
 namespace Brzez\AccessPolicyBundle\Tests\Mocks;
 
-class Apple
+class Apple implements Edible
 {
-    
+
+    public function isReadyToBeEaten()
+    {
+        return true;
+    }
 }
