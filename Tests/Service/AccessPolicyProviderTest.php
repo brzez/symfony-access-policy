@@ -16,10 +16,10 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function filters_multiple_policies_by_class_and_passes_them_to_resolver()
     {
-        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
-
         $applePolicy = new ApplePolicy;
         $anotherApplePolicy = new AnotherApplePolicy;
+
+        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
 
         $resolver->expects($this->exactly(2))
             ->method('resolve')->with([$applePolicy, $anotherApplePolicy])->willReturn(true);
@@ -34,6 +34,27 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($provider->can('do-thing', $apple));
         $this->assertTrue($provider->can('do-other-thing', $apple));
+    }
+
+    /**
+     * @test
+     */
+    public function will_work_with_phpunit_mocks()
+    {
+        $orangePolicy = new OrangePolicy;
+        $orangeMock = $this->getMock(Orange::class);
+
+        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)
+            ->disableOriginalConstructor()->getMock();
+        $provider = new AccessPolicyProvider($resolver);
+
+
+        $provider->registerPolicy($orangePolicy);
+
+        $resolver->expects($this->once())
+            ->method('resolve')->with([$orangePolicy])->willReturn(true);
+
+        $this->assertTrue($provider->can('do-thing', $orangeMock));
     }
 
     /** @test */
