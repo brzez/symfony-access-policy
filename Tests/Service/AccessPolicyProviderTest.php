@@ -8,24 +8,32 @@ use Brzez\AccessPolicyBundle\Tests\Mocks\AnotherApplePolicy;
 use Brzez\AccessPolicyBundle\Tests\Mocks\Apple;
 use Brzez\AccessPolicyBundle\Tests\Mocks\ApplePolicy;
 use Brzez\AccessPolicyBundle\Tests\Mocks\Orange;
+use Brzez\AccessPolicyBundle\Tests\Mocks\OrangePolicy;
 use PHPUnit_Framework_TestCase;
 
 class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
 {
     /** @test */
-    public function supports_multiple_policies()
+    public function filters_multiple_policies_by_class_and_passes_them_to_resolver()
     {
         $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
 
+        $applePolicy = new ApplePolicy;
+        $anotherApplePolicy = new AnotherApplePolicy;
+
+        $resolver->expects($this->exactly(2))
+            ->method('resolve')->with([$applePolicy, $anotherApplePolicy])->willReturn(true);
+
         $provider = new AccessPolicyProvider($resolver);
 
-        $provider->registerPolicy(new ApplePolicy);
-        $provider->registerPolicy(new AnotherApplePolicy);
+        $provider->registerPolicy($applePolicy);
+        $provider->registerPolicy($anotherApplePolicy);
+        $provider->registerPolicy(new OrangePolicy);
 
         $apple = new Apple;
 
         $this->assertTrue($provider->can('do-thing', $apple));
-        $this->assertFalse($provider->can('do-other-thing', $apple));
+        $this->assertTrue($provider->can('do-other-thing', $apple));
     }
 
     /** @test */
