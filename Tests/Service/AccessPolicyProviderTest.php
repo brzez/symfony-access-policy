@@ -7,19 +7,30 @@ use Brzez\AccessPolicyBundle\Service\AccessPolicyResolver;
 use Brzez\AccessPolicyBundle\Tests\Mocks\AnotherApplePolicy;
 use Brzez\AccessPolicyBundle\Tests\Mocks\Apple;
 use Brzez\AccessPolicyBundle\Tests\Mocks\ApplePolicy;
+use Brzez\AccessPolicyBundle\Tests\Mocks\EdiblePolicy;
 use Brzez\AccessPolicyBundle\Tests\Mocks\Orange;
 use Brzez\AccessPolicyBundle\Tests\Mocks\OrangePolicy;
 use PHPUnit_Framework_TestCase;
 
 class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockAccessPolicyResolver()
+    {
+        return $this->getMockBuilder(AccessPolicyResolver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
     /** @test */
     public function filters_multiple_policies_by_class_and_passes_them_to_resolver()
     {
         $applePolicy = new ApplePolicy;
         $anotherApplePolicy = new AnotherApplePolicy;
 
-        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
+        $resolver = $this->mockAccessPolicyResolver();
 
         $resolver->expects($this->exactly(2))
             ->method('resolve')->with([$applePolicy, $anotherApplePolicy])->willReturn(true);
@@ -34,6 +45,21 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($provider->can('do-thing', $apple));
         $this->assertTrue($provider->can('do-other-thing', $apple));
+    }
+    
+    /** @test */
+    public function will_work_with_policies_for_interfaces()
+    {
+        $ediblePolicy = new EdiblePolicy();
+
+        $resolver = $this->mockAccessPolicyResolver();
+        $resolver->expects($this->once())
+            ->method('resolve')->with([$ediblePolicy])->willReturn(true);
+
+        $provider = new AccessPolicyProvider($resolver);
+        $provider->registerPolicy($ediblePolicy);
+        
+        $this->assertTrue($provider->can('eat', new Apple()));
     }
 
     /**
@@ -62,7 +88,7 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
     {
         $applePolicy = new ApplePolicy;
 
-        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
+        $resolver = $this->mockAccessPolicyResolver();
         $resolver->expects($this->once())->method('resolve')->with([$applePolicy]);
 
         $provider = new AccessPolicyProvider($resolver);
@@ -77,7 +103,7 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
         $apple       = new Apple;
         $applePolicy = new ApplePolicy;
 
-        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
+        $resolver = $this->mockAccessPolicyResolver();
         $resolver->expects($this->exactly(2))->method('resolve')->with(
             [$applePolicy],
             'view',
@@ -96,7 +122,7 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(\Exception::class);
 
-        $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
+        $resolver = $this->mockAccessPolicyResolver();
 
         $provider = new AccessPolicyProvider($resolver);
         $provider->registerPolicy(new ApplePolicy);
