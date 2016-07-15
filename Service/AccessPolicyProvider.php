@@ -16,21 +16,16 @@ class AccessPolicyProvider
 
     public function registerPolicy(AccessPolicyInterface $policy)
     {
-        $class = $policy->getPoliciedClass();
-        
-        if(isset($this->policies[$class])){
-            // todo: support multiple policies for the same type (?)
-            throw new \Exception("Policy for [$class] already registered");
-        }
-        $this->policies[$class] = $policy;
+        $this->policies[] = $policy;
+        return $this;
     }
 
     public function can($intent, $object)
     {
-        $policy = $this->resolvePolicy($object);
-        $args   = array_slice(func_get_args(), 1);
+        $policies = $this->filterPolicies($object);
+        $args     = array_slice(func_get_args(), 1);
 
-        return $this->policyResolver->resolve($policy, $intent, $args);
+        return $this->policyResolver->resolve($policies, $intent, $args);
     }
 
     public function cannot($intent, $object)
@@ -38,12 +33,17 @@ class AccessPolicyProvider
         return ! call_user_func_array([$this, 'can'], func_get_args());
     }
 
-    protected function resolvePolicy($object)
+    protected function filterPolicies($object)
     {
-        $class = get_class($object);
-        if(!isset($this->policies[$class])){
+        $filtered = array_filter($this->policies, function(AccessPolicyInterface $policy) use ($object){
+            $className = $policy->getPoliciedClass();
+            return is_object($object) && is_a($object, $className);
+        });
+
+        if(!count($filtered)){
+            $class = get_class($object);
             throw new \Exception("No policy registered for class [$class]");
         }
-        return $this->policies[get_class($object)];
+        return $filtered;
     }
 }

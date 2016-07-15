@@ -31,11 +31,13 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function resolves_policy_for_specified_object()
     {
+        $applePolicy = new ApplePolicy;
+
         $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
-        $resolver->expects($this->once())->method('resolve')->with($this->isInstanceOf(ApplePolicy::class));
+        $resolver->expects($this->once())->method('resolve')->with([$applePolicy]);
 
         $provider = new AccessPolicyProvider($resolver);
-        $provider->registerPolicy(new ApplePolicy);
+        $provider->registerPolicy($applePolicy);
         
         $provider->can('view', new Apple);
     }
@@ -43,16 +45,18 @@ class AccessPolicyProviderTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function passes_multiple_args()
     {
-        $apple = new Apple;
+        $apple       = new Apple;
+        $applePolicy = new ApplePolicy;
+
         $resolver = $this->getMockBuilder(AccessPolicyResolver::class)->disableOriginalConstructor()->getMock();
         $resolver->expects($this->exactly(2))->method('resolve')->with(
-            $this->isInstanceOf(ApplePolicy::class),
+            [$applePolicy],
             'view',
             [$apple, 1, 2, 3]
         );
 
         $provider = new AccessPolicyProvider($resolver);
-        $provider->registerPolicy(new ApplePolicy);
+        $provider->registerPolicy($applePolicy);
         
         $provider->can('view', $apple, 1, 2, 3);
         $provider->cannot('view', $apple, 1, 2, 3);
